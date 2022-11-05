@@ -1,13 +1,17 @@
 # cuflutter20221126
 
+[コンピュータ・ユニオン関西IT支部 IT技術者・クリエイターカフェ](https://cu-kansai-it.org/) 2022年11月 サンプルコード
+
+[報告資料](https://pages.michinobu.jp/t/20221126firebasefluttercloudworkstations.html)
+
 ## A. 開発環境
 
 ## A.1. 必要なもの
 
 - git
-- fvm: flutter
-- nvm: Node.js 16 を firebase-tools で使用
-- Java ( 11 以降 ): Firebase Emulator で使用
+- fvm ( [Flutter Version Management](https://fvm.app/) )
+- nvm ( [Node Version Manager](https://github.com/nvm-sh/nvm) ): Node.js 16 を firebase-tools で使用
+- Java ( >= 11 ): [Firebase Local Emulator Suite](https://firebase.google.com/docs/emulator-suite) で使用
 
 ```
 $ fvm --version
