@@ -13,7 +13,7 @@
 - nvm ( [Node Version Manager](https://github.com/nvm-sh/nvm) ): Node.js 16 を firebase-tools で使用
 - Java ( >= 11 ): [Firebase Local Emulator Suite](https://firebase.google.com/docs/emulator-suite) で使用
 
-```
+```bash
 $ fvm --version
 2.4.1
 
@@ -35,7 +35,7 @@ openjdk 17.0.4.1 2022-08-12
 
 ## A.2. 開発環境の構築
 
-```
+```bash
 $ git clone git@github.com:MichinobuMaeda/cuflutter20221126.git
 $ cd cuflutter20221126
 $ fvm flutter pub get
@@ -43,17 +43,18 @@ $ npm install
 $ npx firebase --version
 11.16.0
 
+$ npm start
 ```
 
-VS Code で Flutter SDK が見つかならいというメッセージが出る場合は `.vscode/settings.json` ( 無ければ作成する ) に
-[Flutter SDK のパス](https://fvm.app/docs/getting_started/configuration/#:~:text=VS%20Code-,%23,-Option%201%20%2D%20Automatic)
-を設定する。
+`npm start` で Firebase Emulators と Flutter のテストサーバを起動する。
+
+このサンプルソースは Cloud Workstation を開発環境として使う想定なので、テストサーバ起動時に Chrome は自動で起動しない。 `http://localhost:1234/` を手で開くこと。また、 Hot reload はソースのコンパイルまでしかできないので、 Webブラウザを手で更新する必要がある。
 
 ## B. このプロジェクトの作成手順
 
 ### B.1. Flutter のプロジェクトの作成
 
-```
+```bash
 $ fvm --version
 2.4.1
 
@@ -66,7 +67,7 @@ $ fvm flutter create cuflutter20221126 --platforms web
 
 ### B.2. Firebase の設定の追加
 
-```
+```bash
 $ npx firebase login
 $ npx firebase init
 
@@ -148,3 +149,24 @@ https://github.com/settings/connections/applications/89cf50f02ac6aaed3484
 ✔  Firebase initialization complete!
 
 ```
+
+正常に設定できると GitHub のリポジトリの設定の Actions secrets に
+`FIREBASE_SERVICE_ACCOUNT_CUFLUTTER20221126`
+が設定されているはず。
+GitHub Actions から Firebase Hosting にデプロイする際にこのアカウント情報が使われる。
+Actions の設定内容は、生成された `.github/workflows/*.yaml` 参照。
+
+Actions secrets には以下の2点も設定しておくとよい。
+
+- Firebase の API Key: 公開リポジトリの場合はソース中に入れない方がいいので Actions の中で設定する。
+- CI用のアカウント情報: 下記の手順で取得したトークンを使う。
+
+```bash
+$ npx firebase login:ci
+ ... ... ...
+1// ... ... ...
+
+Example: firebase deploy --token "$FIREBASE_TOKEN"
+```
+
+それぞれ `FIREBASE_API_KEY_CUFLUTTER20221126` および `FIREBASE_TOKEN_CUFLUTTER20221126` として設定した。
