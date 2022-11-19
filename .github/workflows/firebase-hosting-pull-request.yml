@@ -33,6 +33,9 @@ jobs:
           cache: 'npm'
           cache-dependency-path: node-cache-key.txt
       - run: npm ci && cd functions && npm ci
+      - run: |
+          run deploy:firestore \
+            --token "${{ secrets.FIREBASE_TOKEN_CUFLUTTER20221126 }}"
 
       - name: Get FVM config
         uses: kuhnroyal/flutter-fvm-config-action@v1
