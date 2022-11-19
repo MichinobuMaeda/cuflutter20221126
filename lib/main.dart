@@ -1,6 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'firebase_options.dart';
+import 'version.dart';
 
-void main() {
+void main() async {
+  // Firebase への接続を初期化する。
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  // ローカルのテスト環境の場合の Firebase の接続先を設定する。
+  if (version == 'for test') {
+    try {
+      FirebaseFirestore.instance.useFirestoreEmulator('localhost', 8080);
+    } catch (e) {
+      // この処理はアプリのリロード時に重複して実行される。
+      debugPrint('Firebase has already been started.');
+    }
+  }
+
   runApp(const MyApp());
 }
 
@@ -50,15 +69,46 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
+  // _counter が Firestore のデータの値と同期するように変更する。
+  final DocumentReference<Map<String, dynamic>> _docRef =
+      FirebaseFirestore.instance.collection('counters').doc('counter01');
+
+  @override
+  void initState() {
+    super.initState();
+    initFirestore();
+  }
+
+  Future<void> initFirestore() async {
+    // Firestore のデータが無ければ初期データを作成する。
+    DocumentSnapshot<Map<String, dynamic>> doc = await _docRef.get();
+    if (!doc.exists) {
+      await _docRef.set({'value': 0});
+    }
+
+    // Firestore のデータの変更を受信して _counter に設定する。
+    // この変更は setState() で表示に反映する。
+    _docRef.snapshots().listen(
+      (snap) {
+        setState(() {
+          _counter = snap.get('value');
+        });
+      },
+    );
+  }
+
+  // ボタンクリック時に _counter の値を変更する処理を削除して、
+  // Firestore のデータを更新するように変更する。
   void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
+    // setState(() {
+    //   // This call to setState tells the Flutter framework that something has
+    //   // changed in this State, which causes it to rerun the build method below
+    //   // so that the display can reflect the updated values. If we changed
+    //   // _counter without calling setState(), then the build method would not be
+    //   // called again, and so nothing would appear to happen.
+    //   _counter++;
+    // });
+    _docRef.update({'value': FieldValue.increment(1)});
   }
 
   @override

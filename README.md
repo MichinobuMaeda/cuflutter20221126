@@ -2,7 +2,7 @@
 
 [コンピュータ・ユニオン関西IT支部 IT技術者・クリエイターカフェ](https://cu-kansai-it.org/) 2022年11月 サンプルコード
 
-[報告資料](https://pages.michinobu.jp/t/20221126firebasefluttercloudworkstations.html)
+[報告資料](https://pages.michinobu.jp/t/20221126firebaseflutter.html)
 
 ## A. 開発環境
 
