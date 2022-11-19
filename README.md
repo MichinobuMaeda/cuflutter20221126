@@ -4,16 +4,23 @@
 
 [報告資料](https://pages.michinobu.jp/t/20221126firebaseflutter.html)
 
+このサンプルは Flutter のプロジェクト作成時に自動で生成される、ボタンを押すと数値がインクリメントされるサンプルのカウンターを [Firebase](https://firebase.google.com/) の Cloud Firestore のバックエンドに差し替えただけのものです。
+
 ## A. 開発環境
 
 ## A.1. 必要なもの
 
 - git
-- fvm ( [Flutter Version Management](https://fvm.app/) )
-- nvm ( [Node Version Manager](https://github.com/nvm-sh/nvm) ): Node.js 16 を firebase-tools で使用
-- Java ( >= 11 ): [Firebase Local Emulator Suite](https://firebase.google.com/docs/emulator-suite) で使用
+- fvm ( [Flutter Version Management](https://fvm.app/) ): Flutter のバージョンアップが速いので、一定のバージョンで作業するために利用する。
+- nvm ( [Node Version Manager](https://github.com/nvm-sh/nvm) ): Node.js 16 を firebase-tools で使用する。
+- Java ( >= 11 ): [Firebase Local Emulator Suite](https://firebase.google.com/docs/emulator-suite) で使用する。
+
+以下のバージョンは、このサンプルの作成時のものです。
 
 ```bash
+$ git --version
+git version 2.38.1
+
 $ fvm --version
 2.4.1
 
@@ -35,6 +42,8 @@ openjdk 17.0.4.1 2022-08-12
 
 ## A.2. 開発環境の構築
 
+このサンプルをローカルで動かすには以下のようにしてください。
+
 ```bash
 $ git clone git@github.com:MichinobuMaeda/cuflutter20221126.git
 $ cd cuflutter20221126
@@ -46,11 +55,9 @@ $ npx firebase --version
 $ npm start
 ```
 
-`npm start` で Firebase Emulators と Flutter のテストサーバを起動する。
+`npm start` で Firebase Emulators と Flutter のテストサーバを起動します。
 
-このサンプルソースは Cloud Workstation を開発環境として使う想定なので、テストサーバ起動時に Chrome は自動で起動しない。 `http://localhost:1234/` を手で開くこと。また、 Hot reload はソースのコンパイルまでしかできないので、 Webブラウザを手で更新する必要がある。
-
-## B. このプロジェクトの作成手順
+## B. 参考：このプロジェクトの作成手順
 
 ### B.1. Flutter のプロジェクトの作成
 
@@ -170,3 +177,16 @@ Example: firebase deploy --token "$FIREBASE_TOKEN"
 ```
 
 それぞれ `FIREBASE_API_KEY_CUFLUTTER20221126` および `FIREBASE_TOKEN_CUFLUTTER20221126` として設定した。
+
+[Add Firebase to your Flutter app](https://firebase.google.com/docs/flutter/setup?platform=web)
+の手順で Firebase の初期化コードを追加する。
+`firebase_options.dart` が自動で生成されるので、その中の `apiKey` をダミーの文字列に置き換えて GitHub Actions の中で設定し直すようにする。ローカルのテスト環境はダミーの文字列のままでよい。
+
+GitHub Actions の中の処理は以下の通り。
+
+```yaml
+      - name: Set firebase api key
+        run: |
+          sed 's/FIREBASE_API_KEY/${{ secrets.FIREBASE_API_KEY_CUFLUTTER20221126 }}/' \
+            -i lib/firebase_options.dart
+```
