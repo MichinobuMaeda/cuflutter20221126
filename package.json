@@ -4,7 +4,7 @@
     "description": "Sample code",
     "scripts": {
       "deploy:functions": "firebase deploy --only functions --force ",
-      "start:ui": "fvm flutter run -d web-server --web-port=1234",
+      "start:ui": "fvm flutter run -d chrome",
       "start:emu": "firebase emulators:exec --only auth,functions,firestore,storage --ui",
       "start": "npm run start:emu -- \"npm run start:ui\"",
       "test:functions": "npm --prefix functions run lint && npm --prefix functions test -- --silent",
