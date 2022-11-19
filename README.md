@@ -184,6 +184,8 @@ Example: firebase deploy --token "$FIREBASE_TOKEN"
 
 GitHub Actions の中の処理は以下の通り。
 
+`.github/workflows/firebase-hosting-merge.yml`, `.github/workflows/firebase-hosting-pull-request.yml`
+
 ```yaml
       - name: Set firebase api key
         run: |
